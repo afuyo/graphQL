@@ -1,0 +1,33 @@
+type Poc1Person @model
+{
+partyKey: ID!
+partyKind: String
+birthDateTime: String
+deathIndicator: Int
+missingIndicator: Int
+missingDateTime: String
+bloodTypeCode: String!
+genderCode: String!
+ethnicityCode: String!
+maritalStatusCode: String!
+personNames: [Poc1PersonName] @connection(name: "Name")
+}
+
+type Poc1PersonName @model
+{
+partyNameKey: ID!
+givenName: String
+description: String
+middleName: String
+fullName: String
+defaultIndicator: Int
+surname: String
+suffix: String
+effectivePeriodEndDateTime: String!
+owner.partyKey: Int
+effectivePeriodStartDateTime: String!
+prefixTitleCode: String!
+partyNameKind: String
+usageCode: String!
+person: Poc1Person @connection(name: "Name")
+}
