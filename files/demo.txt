@@ -1,0 +1,7 @@
+match(n:Poc1LogiskModel) return n;
+
+match(n:Poc1FysiskModel) return n;
+
+match(n:Poc1NodeType)-[r:POC1_HAR_RELATIONSHIP]->(p:Poc1FysiskRelation) 
+where (n.Namn="Contact Method" and p.Namn="Preferred Party Name") 
+match (v:Poc1NodeType) where (p.type = v.EAID) return n,p,v[

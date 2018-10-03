@@ -1,0 +1,69 @@
+match(n) where (n.type = "uml:DataType" and n._name = "packagedElement") or (n.type="uml:Class" and n._name = "packagedElement") set n:ObjectType return n;
+
+match(n) where (n.type = "uml:DataType" and n._name = "packagedElement" and n.name in ['Party Registration','Person Registration','Person','Person Name','Party Name','Contact Method','Party','Telephone Number','Telephone Call Contact']) or 
+(n.type="uml:Class" and n._name = "packagedElement" and n.name in ['Party Registration','Person Registration','Person','Person Name','Party Name','Contact Method','Party','Telephone Number','Telephone Call Contact'])  return n;
+###########################################################################
+
+MATCH 
+(o:ObjectType)
+where o._name = "packagedElement"
+and o.type <> "uml:Enumeration" and exists(o.name)
+and o.id starts with "_fbb"
+with o.name as ObjektNavn, o.id as EAID
+merge (n:LogiskModel:ObjectType {ModelNavn: "LogModel 1", Navn: ObjektNavn, EAID: EAID })
+return count(ObjektNavn)
+
+#####################################################
+
+MATCH 
+(e:ObjectType)-[r:IS_CHILD_OF]->(o:ObjectType)
+where o._name = "packagedElement" and exists(e.name) 
+and o.type <> "uml:Enumeration" and exists(o.name)
+and o.id starts with "_fbb"
+with e.name as PropertyNavn, e.id as EAID
+merge (n:LogiskModel:LogiskProperty {ModelNavn: "LogModel 1", Navn: PropertyNavn, EAID: EAID })
+
+
+##################################################################
+
+MATCH 
+(e:ObjectType)-[r]->(o:ObjectType)
+where o._name = "packagedElement" and exists(e.name) 
+and o.type <> "uml:Enumeration" and exists(o.name)
+and o.id starts with "_fbb"
+with o.name as ObjektNavn, o.id as EAID_O, e.name as PropertyNavn, e.id as EAID_P
+match (o:ObjectType {ModelNavn: "LogModel 1", Navn: ObjektNavn, EAID: EAID_O}) 
+match (e:LogiskProperty {ModelNavn: "LogModel 1", Navn: PropertyNavn, EAID: EAID_P})
+merge (o)-[:FUNKTIONAL_AFH]->(e)
+
+
+match (g:ObjectType), (l:LogiskModel {ModelNavn: "LogModel 1"}) 
+where g.id = l.EAID
+with g.id as G_ID, l.EAID as L_ID
+match (g:ObjectType {id: G_ID})
+match (l:LogiskModel {ModelNavn: "LogModel 1", EAID: L_ID})
+merge (g)-[:ORIGIN_OF]->(l)
+
+MATCH (n:FysiskModel) detach delete (n);
+
+MATCH (n:LogiskModel:ObjectType) where n.ModelNavn = "LogModel 1"
+CREATE (fo:FysiskModel:NodeType {ModelNavn:"FysModel 1", EAID:n.EAID, Navn:n.Navn});
+
+MATCH (n:LogiskModel:LogiskProperty) where n.ModelNavn = "LogModel 1"
+CREATE (fp:FysiskModel:FysiskProperty {ModelNavn:"FysModel 1", EAID:n.EAID, Navn:n.Navn});
+
+
+MATCH (o:LogiskModel:ObjectType {ModelNavn: "LogModel 1"})-[:FUNKTIONAL_AFH]->(p:LogiskModel:LogiskProperty)
+WITH o.Navn as ObjektNavn, o.EAID AS EAID_lmo, p.Navn as PropertyNavn, p.EAID as EAID_lmp 
+MATCH (o:FysiskModel:NodeType {ModelNavn: "FysModel 1", Navn: ObjektNavn, EAID:EAID_lmo})
+MATCH (p:FysiskModel:FysiskProperty {ModelNavn: "FysModel 1", Navn: PropertyNavn, EAID:EAID_lmp})
+MERGE (o)-[:HAR_PROPERTY]->(p);
+
+
+MATCH (l:LogiskModel {ModelNavn: "LogModel 1"} ), (f:FysiskModel{ModelNavn: "FysModel 1"})
+where l.EAID = f.EAID
+WITH l.EAID as L_ID, f.EAID as F_ID
+MATCH (l:LogiskModel {EAID: L_ID})
+MATCH (f:FysiskModel {EAID: F_ID})
+MERGE (l)-[:IMPLEMENTERET_AF]->(f)
+;
