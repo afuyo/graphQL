@@ -1,0 +1,114 @@
+Create (n1:Person {name:'Tom'}), (n2:Person {name:'John'}), 
+(n3:Company {name:'Company1'}), 
+(n5:Car {brand:'Ferrari'}), 
+(n6:Animal:Cat {name:'Derby'}), 
+(n7:City {name:'London'}),
+(n1)-[:WORKS_FOR]->(n3), 
+(n2)-[:WORKS_FOR]->(n3), 
+(n3)-[:HAS_HQ{since:2004}]->(n7), 
+(n1)-[:DRIVE{since:2017}]->(n5), 
+(n2)-[:HAS{since:2013}]->(n6) return *;
+
+
+MATCH (a1:Person{name:'John'}), 
+(a2:Person {name:'Tom'}) 
+WITH head(collect([a1,a2])) 
+as nodes CALL apoc.refactor.mergeNodes(nodes,{properties:"override", mergeRels:true}) 
+yield node MATCH (n)-[r:WORKS_FOR]->(c) return * ;
+
+
+create (n1:TestNode {name:'A'}), (n2:TestNode{name:'B'}),(n3:TestProp{name:'P1'}),(n4:TestProp{name:'P2'}),(n5:TestProp{name:'P3'})
+,(n6:TestNodeDiff{name:'A',id:3}),
+(n1)-[:HAS_R]->(n6),
+(n6)<-[:HAS_R]-(n2),
+(n1)-[:HAS_P1]->(n3),
+(n2)-[:HAS_P2]->(n4),
+(n2)-[:HAS_P3]->(n5) return *;
+
+MATCH (a1:TestNode{name:'A'}), 
+(a2:TestNode {name:'B'}) 
+WITH head(collect([a1,a2])) 
+as nodes CALL apoc.refactor.mergeNodes(nodes,{properties:"override", mergeRels:true}) 
+yield node MATCH (n)-[r:HAS_R]->(c) return * ;
+
+MATCH (a1:Poc1FysiskModel:Poc1NodeType{Namn:'Contact Method'}),
+(a2:Poc1FysiskModel:Poc1NodeType{Namn:'Telephone Call Contact'})
+WITH head(collect([a1,a2])) 
+as nodes CALL apoc.refactor.mergeNodes(nodes,{properties:"override", mergeRels:true}) 
+yield node MATCH (n)-[r:POC1_IS_SUBTYPE]->(c) return * ;
+
+
+//ROLLUP 
+MATCH (a1:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where a1.EAID=p1.general and a1.Namn="Contact Method" MATCH(a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where a2.EAID=p1.EAID_O and a2.Namn="Telephone Call Contact" 
+WITH a1.EAID as EAID_1, a2.EAID as EAID_2
+MATCH (a1:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", EAID:EAID_1})
+MATCH (a2:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", EAID:EAID_2})
+WITH head(collect([a1,a2])) 
+as nodes CALL apoc.refactor.mergeNodes(nodes,{properties:"override", mergeRels:true}) 
+yield node MATCH (n)-[r:POC1_IS_SUBTYPE]->(c) return * ;
+
+//ROLLDOWN
+MATCH(a1:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where a1.EAID=p1.EAID_O 
+//and a1.Namn="Telephone Call Contact" 
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where a2.EAID=p1.general 
+//and a2.Namn="Contact Method" 
+WITH a1.EAID as EAID_1, a2.EAID as EAID_2
+MATCH (a1:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", EAID:EAID_1})
+MATCH (a2:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", EAID:EAID_2})
+WITH head(collect([a1,a2])) 
+as nodes CALL apoc.refactor.mergeNodes(nodes,{properties:"override", mergeRels:true}) 
+yield node MATCH (n)-[r:POC1_IS_SUBTYPE]->(c) return * ;
+
+MATCH(a1:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where a1.EAID=p1.EAID_O 
+and a1.Namn="Person Name" 
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where a2.EAID=p1.general 
+and a2.Namn="Party Name" 
+WITH a1.EAID as EAID_1, a2.EAID as EAID_2
+MATCH (a1:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", EAID:EAID_1})
+MATCH (a2:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", EAID:EAID_2})
+WITH head(collect([a1,a2])) 
+as nodes CALL apoc.refactor.mergeNodes(nodes,{properties:"override", mergeRels:true}) 
+yield node MATCH (n)-[r:POC1_IS_SUBTYPE]->(c) return * ;
+
+MATCH(a1:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where a1.EAID=p1.EAID_O 
+and a1.Namn="Person" 
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where a2.EAID=p1.general 
+and a2.Namn="Party" 
+WITH a1.EAID as EAID_1, a2.EAID as EAID_2
+MATCH (a1:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", EAID:EAID_1})
+MATCH (a2:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", EAID:EAID_2})
+WITH head(collect([a1,a2])) 
+as nodes CALL apoc.refactor.mergeNodes(nodes,{properties:"override", mergeRels:true}) 
+yield node MATCH (n)-[r:POC1_IS_SUBTYPE]->(c) return * ;
+
+// and so on  with registration 
+
+
+MATCH (a1:TestNode{name:'A'}), 
+(a2:TestNode {name:'C'}) 
+CALL apoc.refactor.mergeNodes([a1,a2])
+YIELD node RETURN node;
+
+match(n:Animal) detach delete n;
+match(n:Company) detach delete n;
+match(n:City) detach delete n;
+match(n:Person) detach delete n;
+match(n:Car) detach delete n;
+
+
+start n=node(1632902), m=node(1632900) match (n)-[r]->(m) 
+with n,m,type(r) as t, tail(collect(r)) as coll 
+foreach(x in coll | delete x)
+
+####remove duplicates
+start n=node(1632919), m=node(1632920) match (n)-[r]->(m) 
+ with n,m,type(r) as t, tail(collect(r)) as coll 
+ foreach(x in coll | delete x);
+ 
+ ### remove relationships globally
+
+ start r=relationship(*) 
+match (s)-[r]->(e)
+with s,e,type(r) as typ, tail(collect(r)) as coll 
+foreach(x in coll | delete x)
+ 

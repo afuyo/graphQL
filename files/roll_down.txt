@@ -1,0 +1,54 @@
+MATCH(a1:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where a1.EAID=p1.EAID_O 
+and a1.Namn="Telephone Call Contact" 
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where a2.EAID=p1.general 
+and a2.Namn="Contact Method" 
+WITH a1.EAID as EAID_1, a2.EAID as EAID_2
+MATCH (a1:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", EAID:EAID_1})
+MATCH (a2:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", EAID:EAID_2})
+WITH head(collect([a1,a2])) 
+as nodes CALL apoc.refactor.mergeNodes(nodes,{properties:"override", mergeRels:true}) 
+yield node MATCH (n)-[r:POC1_IS_SUBTYPE]->(c) return * ;
+
+MATCH(a1:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where a1.EAID=p1.EAID_O 
+and a1.Namn="Person Name" 
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where a2.EAID=p1.general 
+and a2.Namn="Party Name" 
+WITH a1.EAID as EAID_1, a2.EAID as EAID_2
+MATCH (a1:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", EAID:EAID_1})
+MATCH (a2:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", EAID:EAID_2})
+WITH head(collect([a1,a2])) 
+as nodes CALL apoc.refactor.mergeNodes(nodes,{properties:"override", mergeRels:true}) 
+yield node MATCH (n)-[r:POC1_IS_SUBTYPE]->(c) return * ;
+
+MATCH(a1:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where a1.EAID=p1.EAID_O 
+and a1.Namn="Person" 
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where a2.EAID=p1.general 
+and a2.Namn="Party" 
+WITH a1.EAID as EAID_1, a2.EAID as EAID_2
+MATCH (a1:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", EAID:EAID_1})
+MATCH (a2:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", EAID:EAID_2})
+WITH head(collect([a1,a2])) 
+as nodes CALL apoc.refactor.mergeNodes(nodes,{properties:"override", mergeRels:true}) 
+yield node MATCH (n)-[r:POC1_IS_SUBTYPE]->(c) return * ;
+
+MATCH(a1:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where a1.EAID=p1.EAID_O 
+and a1.Namn="Party Registration" 
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where a2.EAID=p1.general 
+and a2.Namn="Registration" 
+WITH a1.EAID as EAID_1, a2.EAID as EAID_2
+MATCH (a1:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", EAID:EAID_1})
+MATCH (a2:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", EAID:EAID_2})
+WITH head(collect([a1,a2])) 
+as nodes CALL apoc.refactor.mergeNodes(nodes,{properties:"override", mergeRels:true}) 
+yield node MATCH (n)-[r:POC1_IS_SUBTYPE]->(c) return * ;
+
+MATCH(a1:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where a1.EAID=p1.EAID_O 
+and a1.Namn="Person Registration" 
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where a2.EAID=p1.general 
+and a2.Namn="Party Registration" 
+WITH a1.EAID as EAID_1, a2.EAID as EAID_2
+MATCH (a1:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", EAID:EAID_1})
+MATCH (a2:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", EAID:EAID_2})
+WITH head(collect([a1,a2])) 
+as nodes CALL apoc.refactor.mergeNodes(nodes,{properties:"override", mergeRels:true}) 
+yield node MATCH (n)-[r:POC1_IS_SUBTYPE]->(c) return * ;

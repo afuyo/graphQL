@@ -1,0 +1,11 @@
+match(n:Poc1FysiskProperty) 
+with n.Namn as namn, collect(n) as nodes
+where size(nodes) > 1
+return [ p in nodes | p.Namn] as names, size(nodes)
+order by size(nodes) desc;
+
+match(n:Poc1FysiskProperty) 
+with n.Namn as namn, collect(n) as nodes
+where size(nodes) > 1
+unwind nodes[1..] as nd
+detach delete nd;

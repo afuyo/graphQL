@@ -1,0 +1,190 @@
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization)
+where p1.general="_fbbe390b_c08111e68803_e7fb8ec78045" 
+with collect(a2)  as a2_col
+MATCH (a3:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p2:Poc1FysiskGeneralization) where a3.EAID=p2.general //and a3.EAID<>a2.EAID 
+with a2_col, collect(a3) as a3_col
+return filter(x IN a3_col where not x in a2_col) 
+
+
+######SET MINUS#####
+
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization)
+where p1.general="_fbbe390b_c08111e68803_e7fb8ec78045" 
+with collect(a2)  as a2_col
+MATCH (a3:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p2:Poc1FysiskGeneralization) where a3.EAID=p2.general //and a3.EAID<>a2.EAID 
+with a2_col, collect(a3) as a3_col
+filter(x IN a3_col where not x in a2_col)
+return a3_col
+
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization)
+where p1.general="_fbbe390b_c08111e68803_e7fb8ec78045" 
+with collect(a2)  as a2_col
+MATCH (a3:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p2:Poc1FysiskGeneralization) where a3.EAID=p2.general //and a3.EAID<>a2.EAID 
+with a2_col, collect(a3) as a3_col
+with a2_col,a3_col,
+filter(x IN a3_col where not x in a2_col) as a4_col
+return a4_col
+
+##And finally calling apoc but ...
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization)
+where p1.general="_fbbe390b_c08111e68803_e7fb8ec78045" 
+with collect(a2)  as a2_col
+MATCH (a3:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p2:Poc1FysiskGeneralization) where a3.EAID=p2.general //and a3.EAID<>a2.EAID 
+with a2_col, collect(a3) as a3_col
+with a2_col,a3_col,
+filter(x IN a3_col where not x in a2_col) as a4_col
+//return a4_col
+WITH head([a2_col,a3_col]) 
+as nodes CALL apoc.refactor.mergeNodes(nodes,{properties:"override", mergeRels:true}) 
+yield node MATCH (n)-[r:POC1_IS_SUBTYPE]->(c) return * ;
+
+
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization)
+where p1.general="_fbbe390b_c08111e68803_e7fb8ec78045" 
+MATCH (a3:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where a3.EAID=p1.EAID_O 
+//and a3.EAID<>a2.EAID 
+return a3 
+
+
+#################33333
+#########WORKS
+//works 1
+
+MATCH(a1:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where a1.EAID=p1.EAID_O 
+and a1.Namn="Party Registration" 
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where (a2.EAID=p1.general 
+and a2.Namn in ['Registration','Party','Party Name','Contact Method'] )
+WITH a1.EAID as EAID_1, a2.EAID as EAID_2
+MATCH (a1:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", EAID:EAID_1})
+MATCH (a2:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", EAID:EAID_2})
+WITH head(collect([a1,a2])) 
+as nodes CALL apoc.refactor.mergeNodes(nodes,{properties:"override", mergeRels:true}) 
+yield node MATCH (n)-[r:POC1_IS_SUBTYPE]->(c) return * ;
+
+
+MATCH(a1:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where a1.EAID=p1.EAID_O 
+and a1.Namn="Party Registration" 
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where (a2.EAID=p1.general 
+and a2.Namn in ['Contact Method','Party','Party Name','Registration'] )
+WITH a1.EAID as EAID_1, a2.EAID as EAID_2
+MATCH (a1:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", EAID:EAID_1})
+MATCH (a2:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", EAID:EAID_2})
+WITH head(collect([a1,a2])) as a_all
+return a_all
+//works two
+ 
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(pX:Poc1FysiskGeneralization) where (pX.general="_fbbe390b_c08111e68803_e7fb8ec78045" )
+WITH a2.Namn as a2Namn_col, a2.EAID as a2EAID
+MATCH(a1:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where a1.EAID=p1.EAID_O 
+and a1.Namn="Party Registration" 
+and p1.general=a2EAID
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where (a2.EAID=p1.general 
+and a2.Namn in a2Namn_col )
+WITH head(collect([a1,a2])) as a_all
+return a_all
+
+//only returns contact method because of head() doh
+
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(pX:Poc1FysiskGeneralization) where (pX.general="_fbbe390b_c08111e68803_e7fb8ec78045" )
+WITH a2.Namn as a2Namn_col, a2.EAID as a2EAID
+MATCH(a1:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where
+a1.EAID=p1.EAID_O 
+//and a1.Namn="Party Registration" 
+and p1.general=a2EAID
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where (a2.EAID=p1.general 
+and a2.Namn in a2Namn_col )
+WITH head(collect([a1,a2])) as a_all
+return a_all
+
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(pX:Poc1FysiskGeneralization) where (pX.general="_fbbe390b_c08111e68803_e7fb8ec78045" )
+WITH a2.Namn as a2Namn_col, a2.EAID as a2EAID
+MATCH(a1:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where
+a1.EAID=p1.EAID_O 
+//and a1.Namn="Party Registration" 
+and p1.general=a2EAID
+MATCH (a3:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where (a3.EAID=p1.general 
+and a3.Namn in a2Namn_col )
+WITH [a1,a3]
+as nodes CALL apoc.refactor.mergeNodes(nodes,{properties:"override", mergeRels:true}) 
+yield node MATCH (n)-[r:POC1_IS_SUBTYPE]->(c) return * ;
+
+
+
+###################################33333
+############ probably need to call for each mergeNodes wants to get on two node as argument
+##########################33
+
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(pX:Poc1FysiskGeneralization) where (pX.general="_fbbe390b_c08111e68803_e7fb8ec78045" )
+WITH a2.Namn as a2Namn_col, a2.EAID as a2EAID
+MATCH(a1:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where
+a1.EAID=p1.EAID_O 
+//and a1.Namn="Party Registration" 
+and p1.general=a2EAID
+MATCH (a3:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where (a3.EAID=p1.general 
+and a3.Namn in a2Namn_col )
+WITH a1 as A1 ,a3 as A3
+return A3
+
+
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(pX:Poc1FysiskGeneralization)<-[:POC1_IS_SUBTYPE]- (a3:Poc1NodeType) where (a2.Namn="Registration") return a2,a3;
+
+####Put the code above in the loop and call apoc.
+
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(pX:Poc1FysiskGeneralization) where (pX.general="_fbbe390b_c08111e68803_e7fb8ec78045" ) 
+with collect(a2.Namn) as a2Namns 
+unwind a2Namns as x match(a3:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization)<-[:POC1_IS_SUBTYPE]-(a4:Poc1NodeType)
+where a3.Namn=x 
+return a4;
+#################################################
+
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(pX:Poc1FysiskGeneralization) where (pX.general="_fbbe390b_c08111e68803_e7fb8ec78045" )
+WITH collect(a2.Namn) as a2Namn_col,collect(a2.EAID) as a2EAID
+MATCH(a1:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where
+a1.EAID=p1.EAID_O 
+//and a1.Namn="Party Registration" 
+and p1.general in a2EAID
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where (a2.EAID=p1.general 
+and a2.Namn in a2Namn_col )
+WITH head(collect([a1,a2])) as a_all
+return a_all
+
+
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(pX:Poc1FysiskGeneralization) where (pX.general="_fbbe390b_c08111e68803_e7fb8ec78045" )
+//we got parents lets get children
+WITH collect(a2.Namn) as a2Namn_col,collect(a2.EAID) as a2EAID
+MATCH(a1:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where
+a1.EAID=p1.EAID_O 
+and p1.general in a2EAID
+//children
+with a2EAID as a2EAIDS, collect(a1.EAID) as a1EAIDS
+MATCH (a1:Poc1NodeType) where (a1.EAID in a1EAIDS)
+MATCH (a2:Poc1NodeType) where (a2.EAID in a2EAIDS)
+WITH head(collect([a1,a2])) as a_all
+return a_all
+
+
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(pX:Poc1FysiskGeneralization) where (pX.general="_fbbe390b_c08111e68803_e7fb8ec78045" )
+WITH collect(a2.Namn) as a2Namn_col,collect(a2.EAID) as a2EAID
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(pX:Poc1FysiskGeneralization) where (pX.general="_fbbe390b_c08111e68803_e7fb8ec78045" )
+//we got parents lets get children
+WITH collect(a2.Namn) as a2Namn_col,collect(a2.EAID) as a2EAID
+MATCH(a1:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where
+a1.EAID=p1.EAID_O 
+and p1.general in a2EAID
+//children
+with a2EAID as a2EAIDS, collect(a1.EAID) as a1EAIDS
+MATCH (a1:Poc1NodeType) where (a1.EAID in a1EAIDS)
+MATCH (a2:Poc1NodeType) where (a2.EAID in a2EAIDS)
+return a2;
+################33333
+
+MATCH(a1:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where a1.EAID=p1.EAID_O 
+and a1.Namn="Party Registration" 
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization) where (a2.EAID=p1.general 
+and a2.Namn in ['Registration','Party','Party Name','Contact Method'] )
+WITH a1.EAID as EAID_1, a2.EAID as EAID_2
+MATCH (a1:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", EAID:EAID_1})
+MATCH (a2:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", EAID:EAID_2})
+WITH head(collect([a1,a2])) 
+as nodes CALL apoc.refactor.mergeNodes(nodes,{properties:"override", mergeRels:true}) 
+yield node MATCH (n)-[r:POC1_IS_SUBTYPE]->(c) return * ;
