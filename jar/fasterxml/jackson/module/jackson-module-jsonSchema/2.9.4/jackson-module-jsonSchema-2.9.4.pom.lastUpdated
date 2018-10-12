@@ -1,0 +1,5 @@
+#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
+#Tue Jul 03 15:55:57 CEST 2018
+https\://repo.maven.apache.org/maven2/.lastUpdated=1530626157665
+@default-snapshots-https\://dkdc2supdevw002.prd1.prdroot.net\:9443/nexus/content/repositories/snapshots/.lastUpdated=1530626157534
+https\://dkdc2supdevw002.prd1.prdroot.net\:9443/nexus/content/repositories/snapshots/.error=Could not transfer artifact com.fasterxml.jackson.module\:jackson-module-jsonSchema\:pom\:2.9.4 from/to snapshots (https\://dkdc2supdevw002.prd1.prdroot.net\:9443/nexus/content/repositories/snapshots)\: dkdc2supdevw002.prd1.prdroot.net
