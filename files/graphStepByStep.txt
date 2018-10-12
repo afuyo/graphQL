@@ -6,7 +6,7 @@ match(n) where (n.type = "uml:DataType" and n._name = "packagedElement" and n.na
  (n.type="uml:Class" and n._name = "packagedElement" and n.name in ['Registration','Party Registration','Person Registration','Person','Person Name','Party Name','Contact Method','Party','Telephone Number','Telephone Call Contact']) 
 set n:POC1Type return n;
 
- match(n:Poc1LogiskModel) detach delete n;
+match(n:Poc1LogiskModel) detach delete n;
 
 ###############POC1 Create Logical Model#####################################
 
@@ -116,7 +116,7 @@ where g.id = l.EAID
 with g.id as G_ID, l.EAID as L_ID
 match (g:POC1Type {id: G_ID})
 match (l:Poc1LogiskModel {ModelNavn: "LogModel 1", EAID: L_ID})
-merge (g)-[:POC1_ORIGIN_OF]->(l)
+merge (g)-[:POC1_ORIGIN_OF]->(l);
 ##########################POC1 Step 5 create Physical Nodes ##############
 
 MATCH (n:Poc1FysiskModel) detach delete (n);
@@ -133,7 +133,7 @@ MATCH (n:Poc1LogiskModel:LogicalRelation) where n.ModelNavn = "LogModel 1"
 CREATE (fp:Poc1FysiskModel:Poc1FysiskRelation {ModelNavn:"FysModel 1", EAID:n.EAID, Namn:n.Namn, association:n.association,type:n.type});
 
 MATCH (n:Poc1LogiskModel:LogicalGeneralization) where n.ModelNavn = "LogModel 1"
-CREATE (fp:Poc1FysiskModel:Poc1FysiskGeneralization {ModelNavn:"FysModel 1", Namn:n.Namn, EAID:n.EAID, EAID_O:e.EAID_O, general:n.general, type:n.type});
+CREATE (fp:Poc1FysiskModel:Poc1FysiskGeneralization {ModelNavn:"FysModel 1", Namn:n.Namn, EAID:n.EAID, EAID_O:n.EAID_O, general:n.general, type:n.type});
 
 Namn: attribute, EAID: EAID, EAID_O:EAID_O, general:genOf, type:type
 
