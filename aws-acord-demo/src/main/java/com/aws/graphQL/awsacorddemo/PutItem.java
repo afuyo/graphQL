@@ -44,7 +44,7 @@ public class PutItem
                 "    PutItem Cellists Pau Language=ca Born=1876\n";
         //String[] myargs = new String[] {"Test","YYY","Language=ca","Born=1876","abc=abc"};
         //String[] myargs = new String[] {"Poc1Person-q3hrxbt5pvgc5ff7kqb4am23tu","3","partyKey=3","deathIndicator=Agile is dead"};
-        String[] myargs = new String[] {"PocXPersonName-eomrgnoorbgw7m57xsnwj3iwjy","1","partyNameKey=91a03a56-43b9-4962-82e1-f59d586a5d45","fullName=Cartman4"};
+        String[] myargs = new String[] {"PocAPerson-bwj6lt6ts5harekarfjyza4eim","14","birthDateTime=197003101032","gnederCode=F"};
         args=myargs.clone();
        /** args[0]=myargs[0];
         args[1]=myargs[1];
@@ -83,7 +83,7 @@ public class PutItem
                 new HashMap<String,AttributeValue>();
 
         //item_values.put("Name", new AttributeValue(name));
-        item_values.put("id", new AttributeValue(name));
+        item_values.put("partyKey", new AttributeValue(name));
 
         for (String[] field : extra_fields) {
             item_values.put(field[0], new AttributeValue(field[1]));

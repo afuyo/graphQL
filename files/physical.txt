@@ -1,0 +1,71 @@
+MATCH (n:Poc1FysiskModel) detach delete (n);
+
+
+MATCH (n:Poc1LogiskModel:POC1Type) where n.ModelNavn = "LogModel 1"
+CREATE (fo:Poc1FysiskModel:Poc1NodeType {ModelNavn:"FysModel 1", EAID:n.EAID, Namn:n.Namn});
+
+
+//##############################POC1 Step 6 create Physical Properties
+
+
+MATCH (n:Poc1LogiskModel:LogicalProperty) where n.ModelNavn = "LogModel 1"
+CREATE (fp:Poc1FysiskModel:Poc1FysiskProperty {ModelNavn:"FysModel 1", EAID:n.EAID, Namn:n.Namn});
+
+
+MATCH (n:Poc1LogiskModel:LogicalRelation) where n.ModelNavn = "LogModel 1"
+CREATE (fp:Poc1FysiskModel:Poc1FysiskRelation {ModelNavn:"FysModel 1", EAID:n.EAID, EAID_O:n.EAID_O, Namn:n.Namn, association:n.association,type:n.type, cardinality:n.cardinality});
+
+
+MATCH (n:Poc1LogiskModel:LogicalGeneralization) where n.ModelNavn = "LogModel 1"
+CREATE (fp:Poc1FysiskModel:Poc1FysiskGeneralization {ModelNavn:"FysModel 1", Namn:n.Namn, EAID:n.EAID, EAID_O:n.EAID_O, general:n.general, type:n.type});
+
+
+//Namn: attribute, EAID: EAID, EAID_O:EAID_O, general:genOf, type:type
+
+
+//###################################POC1 Step 7.1 create Proerties relationships##############
+
+
+
+
+MATCH (o:Poc1LogiskModel:POC1Type {ModelNavn: "LogModel 1"})-[:FUNCTIONALLY_DEPENDS]->(p:Poc1LogiskModel:LogicalProperty)
+WITH o.Namn as ObjektNavn, o.EAID AS EAID_lmo, p.Namn as PropertyNavn, p.EAID as EAID_lmp 
+MATCH (o:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", Namn: ObjektNavn, EAID:EAID_lmo})
+MATCH (p:Poc1FysiskModel:Poc1FysiskProperty {ModelNavn: "FysModel 1", Namn: PropertyNavn, EAID:EAID_lmp})
+MERGE (o)-[:POC1_HAR_PROPERTY]->(p);
+
+
+
+
+//*****************POC1 Step 7.2 create Relationships 
+
+
+MATCH (o:Poc1LogiskModel:POC1Type {ModelNavn: "LogModel 1"})-[:RELATIONALLY_DEPENDS]->(p:Poc1LogiskModel:LogicalRelation)
+WITH o.Namn as ObjektNavn, o.EAID AS EAID_lmo, p.Namn as PropertyNavn, p.EAID as EAID_lmp, p.association as ass_lmp, p.type as type_lmp 
+MATCH (o:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", Namn: ObjektNavn, EAID:EAID_lmo})
+MATCH (p:Poc1FysiskModel:Poc1FysiskRelation {ModelNavn: "FysModel 1", Namn: PropertyNavn, EAID:EAID_lmp, association: ass_lmp, type: type_lmp})
+MERGE (o)-[:POC1_HAR_RELATIONSHIP]->(p);
+
+
+MATCH (p:Poc1LogiskModel:LogicalRelation)-[:RELATIONALLY_DEPENDS]->(o:Poc1LogiskModel:POC1Type {ModelNavn: "LogModel 1"})
+WITH o.Namn as ObjektNavn, o.EAID AS EAID_lmo, p.Namn as PropertyNavn, p.EAID as EAID_lmp, p.association as ass_lmp, p.type as type_lmp 
+MATCH (o:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", Namn: ObjektNavn, EAID:EAID_lmo})
+MATCH (p:Poc1FysiskModel:Poc1FysiskRelation {ModelNavn: "FysModel 1", Namn: PropertyNavn, EAID:EAID_lmp, association: ass_lmp, type: type_lmp})
+MERGE (p)-[:POC1_HAR_RELATIONSHIP]->(o);
+
+
+//************POC1 Step 7.3 create generalizations
+
+
+MATCH (o:Poc1LogiskModel:POC1Type {ModelNavn: "LogModel 1"})-[:GENERALIZATION_OF]->(p:Poc1LogiskModel:LogicalGeneralization)
+WITH o.Namn as ObjektNavn, o.EAID as EAID_lmo, p.Namn as PropertyNavn, p.EAID as EAID_lmp, p.general as genOf, p.type as type_lmp
+MATCH (o:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", Namn: ObjektNavn, EAID:EAID_lmo})
+MATCH (p:Poc1FysiskModel:Poc1FysiskGeneralization {ModelNavn: "FysModel 1", Namn: PropertyNavn, EAID:EAID_lmp, general: genOf, type: type_lmp})
+MERGE (o)-[:POC1_IS_SUBTYPE]->(p);
+
+
+MATCH (p:Poc1LogiskModel:LogicalGeneralization)-[:GENERALIZATION_OF]->(o:Poc1LogiskModel:POC1Type {ModelNavn: "LogModel 1"})
+WITH p.EAID as EAID_lmp, p.general as genOf, o.EAID as EAID_O
+MATCH (p:Poc1FysiskModel:Poc1FysiskGeneralization {ModelNavn: "FysModel 1", EAID:EAID_lmp})
+MATCH (o:Poc1FysiskModel:Poc1NodeType {ModelNavn: "FysModel 1", EAID: EAID_O})
+MERGE (p)<-[:POC1_IS_SUBTYPE]-(o);

@@ -1,0 +1,3 @@
+curl -XPOST -H "Content-Type:application/graphql" -H "x-api-key:da2-u54bvpb5xjdtfktha4vhap6com" -d '{ "query": "query { listPoc1Persons(limit:5) { items { partyKey } } }" }' https://lxe3l3aiefal7ekpgjy7byhdzi.appsync-api.us-east-1.amazonaws.com/graphql
+
+curl -XPOST -k --insecure -H "Content-Type:application/graphql" -H "x-api-key:da2-u54bvpb5xjdtfktha4vhap6com" -d '{ "query": "query { listPoc1Persons(limit:5) { items { partyKey } } }" }' https://lxe3l3aiefal7ekpgjy7byhdzi.appsync-api.us-east-1.amazonaws.com/graphql
