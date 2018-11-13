@@ -19,9 +19,21 @@ where o._name = "ownedAttribute" and exists(e.name)
 and o.type <> "uml:Enumeration" and exists(o.name)
 and not exists(o.association)
 and o.id starts with "_fbb"
-with o.name as attribute, e.id as EAID_O, o.id as EAID
-merge (n:Poc1LogiskModel:LogicalProperty {ModelNavn: "LogModel 1", Namn: attribute, EAID: EAID, EAID_O:EAID_O });
+with o.name as attribute, e.id as EAID_O, o.id as EAID, o.type as type
+merge (n:Poc1LogiskModel:LogicalProperty {ModelNavn: "LogModel 1", Namn: attribute, EAID: EAID, EAID_O:EAID_O, type_id:type });
 
+
+//match (e:LogicalProperty)
+//match (o:XmlTag)
+//where (e.type_id=o.id)
+//with o.name as typeName, o.type as umlType, e.Namn as Namn, e.EAID as EAID, e.EAID_O as EAID_O, e.type_id as type_id
+//merge (n:Poc1LogiskModel:LogicalProperty {ModelNavn: "LogModel 1", Namn: Namn, EAID:EAID, EAID_O:EAID_O, type_id:type_id, typeName:typeName, umlType:umlType});
+
+match (e:LogicalProperty)
+match (o:XmlTag)
+where (e.type_id=o.id)
+set  e.typeName=o.name
+set e.umlType=o.type;
 
 
 
