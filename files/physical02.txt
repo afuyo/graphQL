@@ -8,8 +8,11 @@ CREATE (fo:Poc1FysiskModel:Poc1NodeType {ModelNavn:"FysModel 1", EAID:n.EAID, Na
 //##############################POC1 Step 6 create Physical Properties
 
 
+//MATCH (n:Poc1LogiskModel:LogicalProperty) where n.ModelNavn = "LogModel 1"
+//CREATE (fp:Poc1FysiskModel:Poc1FysiskProperty {ModelNavn:"FysModel 1", EAID:n.EAID, Namn:n.Namn});
+
 MATCH (n:Poc1LogiskModel:LogicalProperty) where n.ModelNavn = "LogModel 1"
-CREATE (fp:Poc1FysiskModel:Poc1FysiskProperty {ModelNavn:"FysModel 1", EAID:n.EAID, Namn:n.Namn});
+CREATE (fp:Poc1FysiskModel:Poc1FysiskProperty {ModelNavn:"FysModel 1", EAID:n.EAID, Namn:n.Namn, datatype:n.typeName});
 
 
 MATCH (n:Poc1LogiskModel:LogicalRelation) where n.ModelNavn = "LogModel 1"
