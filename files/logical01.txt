@@ -23,17 +23,31 @@ with o.name as attribute, e.id as EAID_O, o.id as EAID, o.type as type
 merge (n:Poc1LogiskModel:LogicalProperty {ModelNavn: "LogModel 1", Namn: attribute, EAID: EAID, EAID_O:EAID_O, type_id:type });
 
 
+
+
 //match (e:LogicalProperty)
 //match (o:XmlTag)
 //where (e.type_id=o.id)
-//with o.name as typeName, o.type as umlType, e.Namn as Namn, e.EAID as EAID, e.EAID_O as EAID_O, e.type_id as type_id
-//merge (n:Poc1LogiskModel:LogicalProperty {ModelNavn: "LogModel 1", Namn: Namn, EAID:EAID, EAID_O:EAID_O, type_id:type_id, typeName:typeName, umlType:umlType});
+//set  e.typeName=o.name
+//set e.umlType=o.type;
+
+
+
+//######DataTypesAsRelations
 
 match (e:LogicalProperty)
 match (o:XmlTag)
 where (e.type_id=o.id)
-set  e.typeName=o.name
-set e.umlType=o.type;
+with o.name as typeName, o.type as umlType, o.id as type_id 
+merge (n:Poc1LogiskModel:LogicalDataType {ModelNavn: "LogModel 1", Namn: typeName, EAID:type_id, umlType:umlType});
+
+match (e:LogicalProperty)
+match(o:LogicalDataType)
+where (e.type_id=o.EAID)
+with e.Namn as PropertyNamn, o.Namn as DataTypeNamn, e.EAID as EAID_P, o.EAID as EAID_T
+match(e:LogicalProperty {ModelNavn: "LogModel 1", Namn: PropertyNamn, EAID: EAID_P})
+match(o:LogicalDataType {ModelNavn: "LogModel 1", Namn: DataTypeNamn, EAID: EAID_T})
+merge (e)-[:IS_OF_DATA_TYPE]->(o); 
 
 
 

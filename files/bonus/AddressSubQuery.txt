@@ -1,0 +1,1 @@
+MATCH (n:Poc1FysiskModel) where n.Namn in ['Address','Place Address','Network Address','Street Address','Uniform Resource Locator','Telecommunication Address','Telephone Number','Postal Address','ANetwork','Uniform ANetwork','Information Model Object'] RETURN n

@@ -1,0 +1,85 @@
+type Poc1TelephoneCallContact   @model
+{
+contactMethodKey: ID!
+redListIndicator: String
+preferredPartyNamePartyNameKey: String
+purpose: String
+contactMethodKind: String
+usageCode: String
+solicitableIndicator: String
+contactInstructions: String
+validationResultCode: String
+availablePeriod: String
+priorityLevel: String
+lastValidatedDateTime: String
+preferringPartyPartyKey: String
+purposeCode: String
+preferringPartyRoleRoleKey: String
+networkTypeCode: String
+telephoneNumberAddressKey: String
+personName: Poc1PersonName @connection(name: "PersonNameTelephoneCallContactConnection")
+telephoneNumber: Poc1TelephoneNumber @connection(name: "TelephoneNumberTelephoneCallContactConnection")
+person: Poc1Person @connection(name: "PersonTelephoneCallContactConnection")
+}
+type Poc1TelephoneNumber   @model
+{
+telephoneNumber: ID!
+addressKey: String
+trunkPrefix: String
+countryCode: String
+areaCode: String
+extension: String
+fullNumber: String
+poc1TelephoneCallContacts: [Poc1TelephoneCallContact]  @connection(name: "TelephoneNumberTelephoneCallContactConnection")
+}
+type Poc1PersonName   @model
+{
+partyNameKey: ID!
+utilizedLanguageLanguageKey: String
+defaultIndicator: String
+partyNameKind: String
+description: String
+fullName: String
+effectivePeriod: String
+ownerPartyKey: String
+suffix: String
+surname: String
+prefixTitleCode: String
+middleName: String
+givenName: String
+poc1TelephoneCallContacts: [Poc1TelephoneCallContact]  @connection(name: "PersonNameTelephoneCallContactConnection")
+person: Poc1Person @connection(name: "PersonPersonNameConnection")
+}
+type Poc1Person   @model
+{
+partyKey: ID!
+partyKind: String
+birthDateTime: String
+missingIndicator: String
+missingDateTime: String
+primaryLanguageLanguageKey: String
+ethnicityCode: String
+genderCode: String
+bloodTypeCode: String
+deathIndicator: String
+maritalStatusCode: String
+poc1PersonNames: [Poc1PersonName]  @connection(name: "PersonPersonNameConnection")
+poc1PersonRegistrations: [Poc1PersonRegistration]  @connection(name: "PersonPersonRegistrationConnection")
+poc1TelephoneCallContacts: [Poc1TelephoneCallContact]  @connection(name: "PersonTelephoneCallContactConnection")
+}
+type Poc1PersonRegistration   @model
+{
+registrationKey: ID!
+issuedPlacePlaceKey: String
+disqualificationDateTime: String
+registrationKind: String
+includedInRegistryRegistryKey: String
+partyRegistrationKind: String
+disqualificationReasonCode: String
+lastUsedDateTime: String
+lastVerifiedDateTime: String
+identifier: String
+registrantPartyKey: String
+personRegistrationKind: String
+person: Poc1Person @connection(name: "PersonPersonRegistrationConnection")
+}

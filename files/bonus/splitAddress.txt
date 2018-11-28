@@ -1,0 +1,7 @@
+match(n:Poc1NodeType{Namn:"Address"})  call apoc.refactor.cloneNodes([n],true) Yield input, output set output.Namn="ANetwork";
+match(n:Poc1FysiskGeneralization{Namn:"Address"})  call apoc.refactor.cloneNodes([n],true) Yield input, output set output.Namn="ANetwork";
+
+Match(n:Poc1NodeType{Namn:"Address"})-[r:POC1_IS_SUBTYPE]->(m:Poc1FysiskGeneralization{Namn:"ANetwork"}) detach delete r;
+Match(n:Poc1NodeType{Namn:"Address"})-[r:POC1_IS_SUBTYPE]->(m:Poc1FysiskGeneralization{Namn:"Network Address"}) detach delete r;
+Match(n:Poc1NodeType{Namn:"ANetwork"})-[r:POC1_IS_SUBTYPE]->(m:Poc1FysiskGeneralization{Namn:"Address"}) detach delete r;
+Match(n:Poc1NodeType{Namn:"ANetwork"})-[r:POC1_IS_SUBTYPE]->(m:Poc1FysiskGeneralization{Namn:"Place Address"}) detach delete r;

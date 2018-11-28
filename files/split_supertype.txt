@@ -1,0 +1,10 @@
+match(n:Poc1NodeType{Namn:"Party"})  call apoc.refactor.cloneNodes([n],true) Yield input, output set output.Namn="PartyOrganization";
+match(n:Poc1FysiskGeneralization{Namn:"Party"})  call apoc.refactor.cloneNodes([n],true) Yield input, output set output.Namn="PartyOrganization";
+//depracated
+//match(n:Poc1NodeType{Namn:"Party"})  call apoc.refactor.cloneNodesWithRelationships([n]) Yield input, output set output.Namn="PartyOrganization";
+
+Match(n:Poc1NodeType{Namn:"PartyOrganization"})-[r:POC1_IS_SUBTYPE]->(m:Poc1FysiskGeneralization{Namn:"Person"}) detach delete r;
+Match(n:Poc1NodeType{Namn:"Party"})-[r:POC1_IS_SUBTYPE]->(m:Poc1FysiskGeneralization{Namn:"Organization"}) detach delete r;
+Match(n:Poc1NodeType{Namn:"Party"})-[r:POC1_IS_SUBTYPE]->(m:Poc1FysiskGeneralization{Namn:"PartyOrganization"}) detach delete r;
+Match(n:Poc1NodeType{Namn:"PartyOrganization"})-[r:POC1_IS_SUBTYPE]->(m:Poc1FysiskGeneralization{Namn:"Party"}) detach delete r;
+//Match(n:Poc1NodeType{Namn:"PartyOrganization"})-[r:POC1_IS_SUBTYPE]->(m:Poc1FysiskGeneralization{Namn:"Party"}) detach delete r;

@@ -1,0 +1,10 @@
+//clone root object and it generalization
+match(n:Poc1NodeType{Namn:"Network Address"})  call apoc.refactor.cloneNodes([n],true) Yield input, output set output.Namn="Uniform ANetwork";
+match(n:Poc1FysiskGeneralization{Namn:"Network Address"})  call apoc.refactor.cloneNodes([n],true) Yield input, output set output.Namn="Uniform ANetwork";
+
+
+Match(n:Poc1NodeType{Namn:"Network Address"})-[r:POC1_IS_SUBTYPE]->(m:Poc1FysiskGeneralization{Namn:"Uniform ANetwork"}) detach delete r;
+Match(n:Poc1NodeType{Namn:"Network Address"})-[r:POC1_IS_SUBTYPE]->(m:Poc1FysiskGeneralization{Namn:"Uniform Resource Locator"}) detach delete r;
+Match(n:Poc1NodeType{Namn:"Uniform ANetwork"})-[r:POC1_IS_SUBTYPE]->(m:Poc1FysiskGeneralization{Namn:"Network Address"}) detach delete r;
+Match(n:Poc1NodeType{Namn:"Uniform ANetwork"})-[r:POC1_IS_SUBTYPE]->(m:Poc1FysiskGeneralization{Namn:"Telecommunication Address"}) detach delete r;
+//Match(n:Poc1NodeType{Namn:"PartyOrganization"})-[r:POC1_IS_SUBTYPE]->(m:Poc1FysiskGeneralization{Namn:"Party"}) detach delete r;

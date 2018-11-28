@@ -1,0 +1,3 @@
+Match(n:Poc1NodeType {Namn:('Place Address')}),(n1:Poc1NodeType {Namn:('Postal Address')}),(n2:Poc1NodeType {Namn:('Street Address')})
+,(m:Poc1FysiskGeneralization{Namn:'Postal Address'})
+,(m2:Poc1FysiskGeneralization{Namn:'Street Address'}),(m3:Poc1FysiskRelation{Namn:'Delivery Address'})  return *;

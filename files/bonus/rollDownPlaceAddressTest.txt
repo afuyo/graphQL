@@ -1,0 +1,24 @@
+//AutoRollDown#######################################
+
+
+MATCH (a2:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(pX:Poc1FysiskGeneralization) 
+where 
+//(pX.general="_fbbe390b_c08111e68803_e7fb8ec78045" ) 
+//and 
+//a2.Namn in ['Street','Place Address'] 
+a2.Namn in ['Place Address'] 
+with collect(a2.Namn) as a2Namns 
+unwind a2Namns as x match(a3:Poc1NodeType)-[:POC1_IS_SUBTYPE]->(p1:Poc1FysiskGeneralization)<-[:POC1_IS_SUBTYPE]-(a4:Poc1NodeType)
+where a3.Namn=x 
+with collect([a4,a3]) as nodes
+unwind nodes as noder 
+CALL apoc.refactor.mergeNodes(noder,{properties:"override", mergeRels:true}) 
+yield node MATCH (n)-[r:POC1_IS_SUBTYPE]->(c) return * ;
+
+
+//### remove duplicates
+match (s)-[r:POC1_IS_SUBTYPE]->(e)
+with s,e,type(r) as typ, tail(collect(r)) as coll 
+foreach(x in coll | delete x);
+
+

@@ -1,0 +1,2 @@
+match(n:XmlTag{name:"Information Model Object", type:"uml:Class"}) match(a:XmlTag{name:"Party", type:"uml:Class"})  
+call apoc.algo.dijkstraWithDefaultWeight(n,a,'IS_CHILD_OF','distance',10) yield path, weight return path;
