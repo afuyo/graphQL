@@ -69,7 +69,8 @@ public class Loader {
     public static void main (String[] args) throws IOException {
 
         //  Create an instance of the class and process the file.
-      //  new Loader().process();
+       new Loader().process();
+
        /** String data = "'{ \"query\": \"query { listPoc1Persons(limit:5) { items { partyKey } } }\" }'";
         URL url = new URL("https://lxe3l3aiefal7ekpgjy7byhdzi.appsync-api.us-east-1.amazonaws.com/graphql");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -165,7 +166,8 @@ public class Loader {
 
         System.out.println ("Printing GraphQL.");
         queryNodesByCypher(session).forEach (one -> {
-            System.out.println("type Poc1"+one.getNamn().replaceAll("\\s+","") + "   @model");
+           // System.out.println("type Poc1"+one.getNamn().replaceAll("\\s+","") + "   @model");
+            System.out.println("type "+one.getNamn().replaceAll("\\s+","") + "   @model");
             System.out.println("{");
             System.out.println("");
             queryPropertiesByCypher(one.getNamn(),session)
@@ -183,10 +185,12 @@ public class Loader {
             if(map.containsKey(one.getNamn()))
             {
                 map.get(one.getNamn()).forEach(v->
-                        System.out.println("poc1"+v
+                        //System.out.println("poc1"+v
+                        System.out.println(v
                                 .replaceAll("\\s+","")
-                                +"s: [Poc1"+v.replaceAll("\\s+","")+"]  @connection(name: "
-                                +one.getNamn().replaceAll("\\s+","")+v.replaceAll("\\s+","")+"Connection)"));
+                               // +"s: [Poc1"+v.replaceAll("\\s+","")+"]  @connection(name: "
+                                +"s: ["+v.replaceAll("\\s+","")+"]  @connection(name:\""
+                                +one.getNamn().replaceAll("\\s+","")+v.replaceAll("\\s+","")+"Connection\")"));
             }
 
            MultiValuedMap<String,String> map2=getManyToOne(map);
@@ -198,8 +202,9 @@ public class Loader {
                                .substring(0,1)
                                .toLowerCase()+v
                                .replaceAll("\\s+","")
-                               .substring(1)+": Poc1"+v
-                               .replaceAll("\\s+","")+" @connection(name: " +v.replaceAll("\\s+","")+one.getNamn().replaceAll("\\s+","")+"Connection)"));
+                               //.substring(1)+": Poc1"+v
+                               .substring(1)+": "+v
+                               .replaceAll("\\s+","")+" @connection(name:\"" +v.replaceAll("\\s+","")+one.getNamn().replaceAll("\\s+","")+"Connection\")"));
            }
 
             System.out.println("}");
