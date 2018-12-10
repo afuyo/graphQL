@@ -1,0 +1,5 @@
+match(n) detach delete n;
+call apoc.xml.import('file:///tmp/ACORD.xml');
+match(n) where (n.type = "uml:DataType" and n._name = "packagedElement" and n.name in ['Person','Person Name','Party','Organization','Organization Name','Assigned Identifier','Information Model Object','Party Name']) or
+ (n.type="uml:Class" and n._name = "packagedElement" and n.name in ['Person','Person Name','Party','Organization','Organization Name','Assigned Identifier','Information Model Object','Party Name']) 
+set n:POC1Type return n;

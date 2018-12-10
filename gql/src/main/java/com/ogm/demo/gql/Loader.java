@@ -163,11 +163,11 @@ public class Loader {
         //MultiValuedMap<String,String> map2 = new HashSetValuedHashMap<>();
 
         queryRelationshipsByCypher(session).forEach(rel->map.put(rel.get("one").toString(),rel.get("many").toString()));
-
+        String prefix="Poc2";
         System.out.println ("Printing GraphQL.");
         queryNodesByCypher(session).forEach (one -> {
            // System.out.println("type Poc1"+one.getNamn().replaceAll("\\s+","") + "   @model");
-            System.out.println("type "+one.getNamn().replaceAll("\\s+","") + "   @model");
+            System.out.println("type "+prefix+one.getNamn().replaceAll("\\s+","") + "   @model");
             System.out.println("{");
             System.out.println("");
             queryPropertiesByCypher(one.getNamn(),session)
@@ -177,8 +177,9 @@ public class Loader {
                         .toLowerCase()+ prop.getNamn()
                         .replaceAll("\\s+","")
                         .replaceAll("\\.+","")
-                        .substring(1)+": String");
-
+                                 .substring(1)+": String ")
+                          ;
+                         //+ "Acord data type "+prop.getDataType()
 
             });
             //get one to many function
@@ -189,7 +190,7 @@ public class Loader {
                         System.out.println(v
                                 .replaceAll("\\s+","")
                                // +"s: [Poc1"+v.replaceAll("\\s+","")+"]  @connection(name: "
-                                +"s: ["+v.replaceAll("\\s+","")+"]  @connection(name:\""
+                                +"s: ["+prefix+v.replaceAll("\\s+","")+"]  @connection(name:\""
                                 +one.getNamn().replaceAll("\\s+","")+v.replaceAll("\\s+","")+"Connection\")"));
             }
 
@@ -203,7 +204,7 @@ public class Loader {
                                .toLowerCase()+v
                                .replaceAll("\\s+","")
                                //.substring(1)+": Poc1"+v
-                               .substring(1)+": "+v
+                               .substring(1)+": "+prefix+v
                                .replaceAll("\\s+","")+" @connection(name:\"" +v.replaceAll("\\s+","")+one.getNamn().replaceAll("\\s+","")+"Connection\")"));
            }
 
@@ -373,7 +374,7 @@ public class Loader {
         //params.put ("name", marriedTo);
 
         //  Execute query and return the other side of the married relationship
-        String cypher = "MATCH (w:Poc1NodeType) RETURN w";
+        String cypher = "MATCH (w:Poc1NodeType) where w.Namn <> 'Information Model Object' RETURN w";
         return session.query (Poc1NodeType.class, cypher, params);
     }
 
@@ -382,6 +383,8 @@ public class Loader {
         //  Create/load a map to hold the parameter
         Map<String, Object> params = new HashMap<>(1);
         params.put ("Namn", nodeName);
+        //
+        params.put("dataType",nodeName);
 
         //  Execute query and return the other side of the married relationship
         String cypher = "match(n:Poc1NodeType{Namn:$Namn})-[:POC1_HAR_PROPERTY]->(m:Poc1FysiskProperty) return m;";
@@ -390,7 +393,7 @@ public class Loader {
     private Iterable<Map<String,Object>> queryRelationshipsByCypher(Session session) {
 
         //String cypher = "match(n:Poc1NodeType)-[r:POC1_HAR_RELATIONSHIP]->(rel:Poc1FysiskRelation)-[r2:POC1_HAR_RELATIONSHIP]->(m:Poc1NodeType) return n.Namn, collect ([m.Namn,rel.cardinality]);";
-       String cypher = "match(n:Poc1NodeType)-[r:POC1_HAR_RELATIONSHIP]->(rel:Poc1FysiskRelation)-[r2:POC1_HAR_RELATIONSHIP]->(m:Poc1NodeType) where rel.cardinality=\"*\" return n.Namn as one,m.Namn as many;";
+       String cypher = "match(n:Poc1NodeType)-[r:POC1_HAR_RELATIONSHIP]->(rel:Poc1FysiskRelation)-[r2:POC1_HAR_RELATIONSHIP]->(m:Poc1NodeType) where rel.cardinality=\"*\"  and n.Namn<>'Information Model Object' return n.Namn as one,m.Namn as many;";
         return session.query(cypher, Collections.EMPTY_MAP);
     }
 

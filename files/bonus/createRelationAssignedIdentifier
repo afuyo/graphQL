@@ -1,0 +1,1 @@
+match(n:Poc1NodeType{Namn:"Party"}), (m:Poc1FysiskRelation{Namn:"Identifying Assigned Identifier"}) create (n)-[r:POC1_HAR_RELATIONSHIP]->(m)

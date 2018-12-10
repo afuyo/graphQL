@@ -1,0 +1,10 @@
+//clone root object and it generalization
+match(n:Poc1NodeType{Namn:"Party Name"})  call apoc.refactor.cloneNodes([n],true) Yield input, output set output.Namn="OrgName";
+match(n:Poc1FysiskGeneralization{Namn:"Party Name"})  call apoc.refactor.cloneNodes([n],true) Yield input, output set output.Namn="OrgName";
+
+
+Match(n:Poc1NodeType{Namn:"Party Name"})-[r:POC1_IS_SUBTYPE]->(m:Poc1FysiskGeneralization{Namn:"OrgName"}) detach delete r;
+Match(n:Poc1NodeType{Namn:"Party Name"})-[r:POC1_IS_SUBTYPE]->(m:Poc1FysiskGeneralization{Namn:"Organization Name"}) detach delete r;
+Match(n:Poc1NodeType{Namn:"OrgName"})-[r:POC1_IS_SUBTYPE]->(m:Poc1FysiskGeneralization{Namn:"Party Name"}) detach delete r;
+Match(n:Poc1NodeType{Namn:"OrgName"})-[r:POC1_IS_SUBTYPE]->(m:Poc1FysiskGeneralization{Namn:"Person Name"}) detach delete r;
+//Match(n:Poc1NodeType{Namn:"PartyOrganization"})-[r:POC1_IS_SUBTYPE]->(m:Poc1FysiskGeneralization{Namn:"Party"}) detach delete r;

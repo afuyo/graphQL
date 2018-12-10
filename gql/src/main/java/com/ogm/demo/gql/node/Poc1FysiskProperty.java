@@ -34,13 +34,21 @@ public class Poc1FysiskProperty {
      */
     private String Namn;
 
+
+
+    /**
+     * Data type
+     */
+    private String dataType;
+
     public Poc1FysiskProperty(){}
 
-    public Poc1FysiskProperty(Long id, String EAID, String modelNavn, String namn) {
+    public Poc1FysiskProperty(Long id, String EAID, String modelNavn, String namn, String dataType) {
         this.id = id;
         this.EAID = EAID;
         ModelNavn = modelNavn;
         Namn = namn;
+        dataType= dataType;
     }
 
     public Long getId() {
@@ -73,5 +81,12 @@ public class Poc1FysiskProperty {
 
     public void setNamn(String namn) {
         Namn = namn;
+    }
+    public String getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
     }
 }

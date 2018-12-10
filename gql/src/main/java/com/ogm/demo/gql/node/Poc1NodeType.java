@@ -46,6 +46,7 @@ public class Poc1NodeType {
         this.EAID = EAID;
         ModelNavn = modelNavn;
         Namn = namn;
+
     }
 
     public Long getId() {
