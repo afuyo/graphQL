@@ -1,0 +1,23 @@
+mutation createPost {
+  createPost(input:
+{
+  id:126
+  author:"A1"
+  title:"T1"
+  content:"more content"
+  url:"sldkdk"
+  ups:1
+  downs:2
+  version:4
+}) {
+  id
+  author
+  title
+  content
+  url
+  ups
+  downs
+  version
+}
+
+}
