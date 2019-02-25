@@ -7,7 +7,7 @@ var config = {
     "region": "eu-central-1", //your region
     "authenticationType": "API_KEY",
     //"apiKey": "da2-ko4mkf4dbjcpppfzg2da2eydru",
-    "apiKey": "da2-sflaqwxjardjfpwp33jfa7kql4",
+    "apiKey": "da2-nxlz2zs3fjcrhly5bncijp75by",
     //"ApiId": "egywftpedne2ppgqh47xyij7iy"
     "ApiId": "wvivyg2nqfgv7ilbvbw54tvddm"
 };

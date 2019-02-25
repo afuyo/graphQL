@@ -54,7 +54,7 @@ const client = new AWSAppSyncClient({
 // Import gql helper and craft a GraphQL query
 const gql = require('graphql-tag');
 const query = gql(`
-query{getParty(id:"FKS.FF_NR:92093311730152300102") {
+query{getParty(id:"FKS.FF_NR:11267465042142018002") {
     informationModelObjectKind
     partyKey
     typeName
@@ -68,6 +68,70 @@ query{getParty(id:"FKS.FF_NR:92093311730152300102") {
     metaGoldenRecord
     creationDataTime
     metaSource
+    contactmethods{items {
+      priorityLevel
+      informationModelObjectKind
+      messagingContactKind
+      redListIndicator
+      telephoneNumberAddressKey
+      typeName
+      lastValidatedDateTime
+      preferredPartyNamePartyNameKey
+      metaStartEventTime
+      electronicContactKind
+      metaChange
+      preferringPartyRoleRoleKey
+      basicDataCompleteCode
+      purposeCode
+      availablePeriod
+      metaLoadTime
+      contactMethodKind
+      contactMethodKey
+      creationDataTime
+      usageCode
+      networkTypeCode
+      solicitableIndicator
+      purpose
+      metaBk
+      validationResultCode
+      contactInstructions
+      uniformResourceLocatorAddressKey
+      metaCorrection
+      metaGoldenRecord
+      preferringPartyPartyKey
+      metaSource
+      address {
+        floorNumber
+        addressKind
+        informationModelObjectKind
+        postalCountrySubdivisionPlaceKey
+        carrierRoute
+        buildingName
+        typeName
+        addressKey
+        metaStartEventTime
+        postalBarcode
+        metaChange
+        identifier
+        postalCountryPlaceKey
+        boxNumber
+        basicDataCompleteCode
+        metaLoadTime
+        postalStreetAddressAddressKey
+        placeAddressKind
+        creationDataTime
+        metaBk
+        networkAddressKind
+        postalPostCodePlaceKey
+        identifiedPlacePlaceKey
+        unitNumber
+        unstructuredAddress
+        metaCorrection
+        metaGoldenRecord
+        metaSource
+      }
+     
+    }}
     persons{items {
       informationModelObjectKind
       maritalStatusCode
@@ -120,7 +184,7 @@ query{getParty(id:"FKS.FF_NR:92093311730152300102") {
     }}
   } 
   
-  }
+  }  
   `);
 
 client.hydrated().then(function (client) {

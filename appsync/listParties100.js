@@ -68,6 +68,71 @@ query {listPartys(limit:100){items {
     metaGoldenRecord
     creationDataTime
     metaSource
+    contactmethods {
+      items {
+        priorityLevel
+        informationModelObjectKind
+        messagingContactKind
+        redListIndicator
+        telephoneNumberAddressKey
+        typeName
+        lastValidatedDateTime
+        preferredPartyNamePartyNameKey
+        metaStartEventTime
+        electronicContactKind
+        metaChange
+        preferringPartyRoleRoleKey
+        basicDataCompleteCode
+        purposeCode
+        availablePeriod
+        metaLoadTime
+        contactMethodKind
+        contactMethodKey
+        creationDataTime
+        usageCode
+        networkTypeCode
+        solicitableIndicator
+        purpose
+        metaBk
+        validationResultCode
+        contactInstructions
+        uniformResourceLocatorAddressKey
+        metaCorrection
+        metaGoldenRecord
+        preferringPartyPartyKey
+        metaSource
+        address {
+          floorNumber
+          addressKind
+          informationModelObjectKind
+          postalCountrySubdivisionPlaceKey
+          carrierRoute
+          buildingName
+          typeName
+          addressKey
+          metaStartEventTime
+          postalBarcode
+          metaChange
+          identifier
+          postalCountryPlaceKey
+          boxNumber
+          basicDataCompleteCode
+          metaLoadTime
+          postalStreetAddressAddressKey
+          placeAddressKind
+          creationDataTime
+          metaBk
+          networkAddressKind
+          postalPostCodePlaceKey
+          identifiedPlacePlaceKey
+          unitNumber
+          unstructuredAddress
+          metaCorrection
+          metaGoldenRecord
+          metaSource
+        }
+      }
+    }
     persons{items {
       informationModelObjectKind
       maritalStatusCode
@@ -90,6 +155,7 @@ query {listPartys(limit:100){items {
       creationDataTime
       missingDateTime
       metaSource
+      
       personnames{items {
         prefixTitleCode
         informationModelObjectKind
